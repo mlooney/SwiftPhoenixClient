@@ -21,7 +21,7 @@
 
 import Starscream
 
-
+import Foundation
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
@@ -544,7 +544,9 @@ public class Socket {
     self.reconnectTimer.reset()
     
     // Restart the heartbeat timer
-    self.resetHeartbeat()
+    if #available(macOS 10.12, *){
+        self.resetHeartbeat()
+    }
     
     // Inform all onOpen callbacks that the Socket has opened
     self.stateChangeCallbacks.open.forEach({ $0.call() })
@@ -620,7 +622,8 @@ public class Socket {
   //----------------------------------------------------------------------
   // MARK: - Heartbeat
   //----------------------------------------------------------------------
-  internal func resetHeartbeat() {
+    @available(macOS 10.12, *)
+internal func resetHeartbeat() {
     // Clear anything related to the heartbeat
     self.pendingHeartbeatRef = nil
     self.heartbeatTimer?.invalidate()
